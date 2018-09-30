@@ -22,5 +22,6 @@ public class Main{
 
     mat.REF2RREF();
     mat.PrintMatrix();
+    System.out.println(Solver.MatrixSolvable(mat));
   }
 }

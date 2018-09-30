@@ -42,7 +42,7 @@ public class Matrix {
 
   //Operasi pada matrix augmented
   //Informasi mengenai suatu baris
-  public boolean IsRowConstZero(int i){
+  public boolean IsRowCoefZero(int i){
     int j = 1;
     boolean allZero = true;
     while (j<=this.kol && allZero) {
@@ -59,11 +59,45 @@ public class Matrix {
     return (this.TabInt[i][this.kol] == 0);
   }
 
+  public boolean OnlyLeadingOne(int i){
+    boolean leadingOneOnly, leadingOneFound;
+    leadingOneOnly = true;
+    leadingOneFound = false;
+    for ( int j = 1; j <= this.kol; j++) {
+      //Mencari leading one
+      if (!leadingOneFound && Elmt(i,j) != 0){
+        leadingOneFound = true;
+      }
+      //Memeriksa elemen setelah leading one
+      if (leadingOneFound && Elmt(i,j) != 0) {
+        leadingOneOnly = false;
+      }
+    }
+    return leadingOneOnly;
+  }
+
+  public int PosLeadingOne(int i){
+    //Prekondisi : Baris ke-i memiliki leading 1
+    boolean leadingOneFound;
+    int j;
+    j = 1;
+    leadingOneFound = false;
+    while (!leadingOneFound && j<this.kol) {
+      //Mencari leading one
+      if (!leadingOneFound && Elmt(i,j) != 0){
+        leadingOneFound = true;
+      }else{
+        j++;
+      }
+    }
+    return j;
+  }
+
   //Operasi Mengubah Matrix Augmented ke REF/RREF
   public void Matrix2REF(){
     //Prekondisi : Matrix Augmented
     /* Row reduction : 1. Lakukan OBE untuk membuat elemen di bawah lead elemen pada kolom yang sama menjadi 0
-                       2. Urutkan berdasarkan leading 0
+                       2. Urutkan berdasarkan jumlah 0 di depan leading elemnt
                        3. Mengalikan satu baris dengan konstanta ratio untuk membuat leading 1*/
     //Step 1 : Operasi Baris Elementer
     float ratio;
