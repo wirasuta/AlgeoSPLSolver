@@ -2,19 +2,33 @@ import java.util.Scanner;
 
 public class Matrix {
 
-  private float[][] TabInt;
-  private int kol;
-  private int bar;
+  public float[][] TabInt;
+  public int kol;
+  public int bar;
 
-  Matrix(int x, int y){
+  //Konstruktor Matrix
+  //Mengabaikan baris dan kolom index 0
+  public Matrix(int x, int y){
     this.TabInt = new float[x+1][y+1];
     this.bar = x;
     this.kol = y;
     InputMatrix();
   }
 
+  //Getter Elemen
   public float Elmt(int i, int j){
     return this.TabInt[i][j];
+  }
+
+  //Input matrix dari input user
+  //TODO: Gabungkan dengan input matrix dari file external
+  public void InputMatrix(){
+    Scanner inp = new Scanner(System.in);
+    for ( int i=1; i<=this.bar; i++) {
+      for ( int j=1; j<=this.kol; j++) {
+        this.TabInt[i][j] = inp.nextFloat();
+      }
+    }
   }
 
   public void PrintMatrix(){
@@ -26,11 +40,31 @@ public class Matrix {
     }
   }
 
+  //Operasi pada matrix augmented
+  //Informasi mengenai suatu baris
+  public boolean IsRowConstZero(int i){
+    int j = 1;
+    boolean allZero = true;
+    while (j<=this.kol && allZero) {
+      if (this.TabInt[i][j] != 0) {
+        allZero = false;
+      }else{
+        j++;
+      }
+    }
+    return allZero;
+  }
+
+  public boolean IsResZero(int i){
+    return (this.TabInt[i][this.kol] == 0);
+  }
+
+  //Operasi Mengubah Matrix Augmented ke REF/RREF
   public void Matrix2REF(){
-    /* Prekondisi : Matrix Augmented */
-    /* Row reduction : 1. Urutkan berdasarkan leading 0
-                       2. Kerjakan dari row paling pertama dengan membuat leading 1
-                       3. Buat 0 di row di bawah leading 1 atas berikutnya, lalu kalikan dengan konstanta row tersebut untuk membuat leading 1*/
+    //Prekondisi : Matrix Augmented
+    /* Row reduction : 1. Lakukan OBE untuk membuat elemen di bawah lead elemen pada kolom yang sama menjadi 0
+                       2. Urutkan berdasarkan leading 0
+                       3. Mengalikan satu baris dengan konstanta ratio untuk membuat leading 1*/
     //Step 1 : Operasi Baris Elementer
     float ratio;
     for ( int i = 1; i <= this.bar; i++) {
@@ -80,7 +114,7 @@ public class Matrix {
     }
 
     boolean leading1;
-    //Step 3 : Mengalikan tiap baris sehingga memiliki leading 1
+    //Step 3 : Mengalikan tiap baris dengan konstanta ratio sehingga memiliki leading 1
     for ( int i = 1; i <= this.bar; i++) {
       ratio = 1;
       leading1 = true;
@@ -97,6 +131,7 @@ public class Matrix {
   }
 
   public void REF2RREF(){
+    //Prekondisi : Matrix REF
     float ratio;
     boolean leading1;
 
@@ -117,12 +152,4 @@ public class Matrix {
     }
   }
 
-  private void InputMatrix(){
-    Scanner inp = new Scanner(System.in);
-    for ( int i=1; i<=this.bar; i++) {
-      for ( int j=1; j<=this.kol; j++) {
-        this.TabInt[i][j] = inp.nextFloat();
-      }
-    }
-  }
 }
