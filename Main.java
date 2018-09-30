@@ -14,16 +14,6 @@ public class Main{
     mat.PrintMatrix();
 
     System.out.println("===========");
-
-    mat.Matrix2REF();
-    mat.PrintMatrix();
-
-    System.out.println("===========");
-
-    mat.REF2RREF();
-    mat.PrintMatrix();
-
-    System.out.println("===========");
     if (Solver.MatrixSolvable(mat)){
       String[] resArray = Solver.MatrixSolve(mat);
       for (int i=1;i<resArray.length;i++) {

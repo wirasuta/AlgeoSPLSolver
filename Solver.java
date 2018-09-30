@@ -36,7 +36,7 @@ public class Solver {
                 resFloat += Float.valueOf(retArray[j]);
               } catch(NumberFormatException e) {
                 //Jika hasil ke-x bukan bilangan, sambungkan koefisien dengan parameter yang sesuai
-                resString += conCoefParam((-1)*M.Elmt(i,j),retArray[j]);
+                resString += ConCoefParam((-1)*M.Elmt(i,j),retArray[j]);
               }
             }
           }
@@ -48,7 +48,7 @@ public class Solver {
     return retArray;
   }
 
-  private static String conCoefParam(float coef, String param){
+  private static String ConCoefParam(float coef, String param){
     if (coef>1) {
       return "+" + Float.toString(coef) + param;
     }else if (coef == 1){
@@ -59,16 +59,15 @@ public class Solver {
       return Float.toString(coef) + param;
     }
   }
-  
-  public static float SolveInterpolasi (String [] S,float x) {
+
+  public static float SolveInterpolasi(String[] S,float x) {
 	 float y = 0;
-	 
+   float s;
 	 // penyelesaian f(x) setelah fungsi interpolasi terbentuk
-	 for (int i=1; i<=M.kol; i++) {
-		S[i] = String.toFloat(S[i]);
-		y += (S[i]* Math.pow(x,i-1)); 
-    }
-    
-    return y;
+   for (int i=1; i<S.length; i++) {
+     s = Float.valueOf(S[i]);
+     y += (s * Math.pow(x,i-1));
+   }
+   return y;
  }
 }
