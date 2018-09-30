@@ -6,29 +6,14 @@ public class Matrix {
   public int kol;
   public int bar;
 
-  //Konstruktor Matrix
-  //Mengabaikan baris dan kolom index 0
-  public Matrix(int x, int y){
+  Matrix(int x, int y){
     this.TabInt = new float[x+1][y+1];
     this.bar = x;
     this.kol = y;
-    InputMatrix();
   }
 
-  //Getter Elemen
   public float Elmt(int i, int j){
     return this.TabInt[i][j];
-  }
-
-  //Input matrix dari input user
-  //TODO: Gabungkan dengan input matrix dari file external
-  public void InputMatrix(){
-    Scanner inp = new Scanner(System.in);
-    for ( int i=1; i<=this.bar; i++) {
-      for ( int j=1; j<=this.kol; j++) {
-        this.TabInt[i][j] = inp.nextFloat();
-      }
-    }
   }
 
   public void PrintMatrix(){
@@ -40,65 +25,11 @@ public class Matrix {
     }
   }
 
-  //Operasi pada matrix augmented
-  //Informasi mengenai suatu baris
-  public boolean IsRowCoefZero(int i){
-    int j = 1;
-    boolean allZero = true;
-    while (j<=this.kol && allZero) {
-      if (this.TabInt[i][j] != 0) {
-        allZero = false;
-      }else{
-        j++;
-      }
-    }
-    return allZero;
-  }
-
-  public boolean IsResZero(int i){
-    return (this.TabInt[i][this.kol] == 0);
-  }
-
-  public boolean OnlyLeadingOne(int i){
-    boolean leadingOneOnly, leadingOneFound;
-    leadingOneOnly = true;
-    leadingOneFound = false;
-    for ( int j = 1; j <= this.kol; j++) {
-      //Mencari leading one
-      if (!leadingOneFound && Elmt(i,j) != 0){
-        leadingOneFound = true;
-      }
-      //Memeriksa elemen setelah leading one
-      if (leadingOneFound && Elmt(i,j) != 0) {
-        leadingOneOnly = false;
-      }
-    }
-    return leadingOneOnly;
-  }
-
-  public int PosLeadingOne(int i){
-    //Prekondisi : Baris ke-i memiliki leading 1
-    boolean leadingOneFound;
-    int j;
-    j = 1;
-    leadingOneFound = false;
-    while (!leadingOneFound && j<this.kol) {
-      //Mencari leading one
-      if (!leadingOneFound && Elmt(i,j) != 0){
-        leadingOneFound = true;
-      }else{
-        j++;
-      }
-    }
-    return j;
-  }
-
-  //Operasi Mengubah Matrix Augmented ke REF/RREF
   public void Matrix2REF(){
-    //Prekondisi : Matrix Augmented
-    /* Row reduction : 1. Lakukan OBE untuk membuat elemen di bawah lead elemen pada kolom yang sama menjadi 0
-                       2. Urutkan berdasarkan jumlah 0 di depan leading elemnt
-                       3. Mengalikan satu baris dengan konstanta ratio untuk membuat leading 1*/
+    /* Prekondisi : Matrix Augmented */
+    /* Row reduction : 1. Urutkan berdasarkan leading 0
+                       2. Kerjakan dari row paling pertama dengan membuat leading 1
+                       3. Buat 0 di row di bawah leading 1 atas berikutnya, lalu kalikan dengan konstanta row tersebut untuk membuat leading 1*/
     //Step 1 : Operasi Baris Elementer
     float ratio;
     for ( int i = 1; i <= this.bar; i++) {
@@ -148,7 +79,7 @@ public class Matrix {
     }
 
     boolean leading1;
-    //Step 3 : Mengalikan tiap baris dengan konstanta ratio sehingga memiliki leading 1
+    //Step 3 : Mengalikan tiap baris sehingga memiliki leading 1
     for ( int i = 1; i <= this.bar; i++) {
       ratio = 1;
       leading1 = true;
@@ -165,7 +96,6 @@ public class Matrix {
   }
 
   public void REF2RREF(){
-    //Prekondisi : Matrix REF
     float ratio;
     boolean leading1;
 
@@ -186,4 +116,34 @@ public class Matrix {
     }
   }
 
+  public void InputMatrix(){
+    Scanner inp = new Scanner(System.in);
+    for ( int i=1; i<=this.bar; i++) {
+      for ( int j=1; j<=this.kol; j++) {
+        this.TabInt[i][j] = inp.nextFloat();
+      }
+    }
+  }
+  
+  public void makeMatrixInterpolasi () {
+		Matrix inpMatrix = new Matrix(n,n);
+		inpMatrix.InputMatrix();
+		Matrix matrixInterpolasi = new Matrix (n,n+1);
+		for ( int i=1; i<=this.bar; i++) {
+			for ( int j=1; j<=this.kol; j++) {
+				if (j == 1) {
+					matrixInterpolasi.TabInt[i][j] = 1;
+				}
+				else { // nilai elemen untuk kolom selain 1
+					if (j != this.kol) {
+						matrixInterpolasi.TabInt[i][j] = Math.pow(inpMatrix.TabInt [i-1][j-1], j-1);
+					}
+					else { // jika di akhir kolom masukan nilai augmentednya
+						matrixInterpolasi.TabInt[i][j] = inpMatrix.TabInt [i-1][j-1];
+					}
+				}
+			}
+		}
+	}
 }
+
