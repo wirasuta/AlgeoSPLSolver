@@ -59,4 +59,16 @@ public class Solver {
       return Float.toString(coef) + param;
     }
   }
+  
+  public static float SolveInterpolasi (String [] S,float x) {
+	 float y = 0;
+	 
+	 // penyelesaian f(x) setelah fungsi interpolasi terbentuk
+	 for (int i=1; i<=M.kol; i++) {
+		S[i] = String.toFloat(S[i]);
+		y += (S[i]* Math.pow(x,i-1)); 
+    }
+    
+    return y;
+ }
 }
