@@ -1,16 +1,16 @@
-#Tugas Besar Aljabar Geometri
+# Tugas Besar Aljabar Geometri
 
 Github page untuk tugas besar aljabar geometri teknik informatika ITB TA 2018/2019.
 
-##Progress Control
+## Progress Control
 
 [/] Matrix.java
 
    [/] Input
 
-      [] Input File External
+    [] Input File External
 
-      [X] Input Command Line
+    [X] Input Command Line
 
    [X] Matrix ke REF
 
@@ -25,5 +25,5 @@ Github page untuk tugas besar aljabar geometri teknik informatika ITB TA 2018/20
    [ ] Interpolasi
 
    [/] Method Tambahan
-   
+
 [/] Main Program
