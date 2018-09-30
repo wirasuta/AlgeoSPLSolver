@@ -22,6 +22,15 @@ public class Main{
 
     mat.REF2RREF();
     mat.PrintMatrix();
-    System.out.println(Solver.MatrixSolvable(mat));
+
+    System.out.println("===========");
+    if (Solver.MatrixSolvable(mat)){
+      String[] resArray = Solver.MatrixSolve(mat);
+      for (int i=1;i<resArray.length;i++) {
+          System.out.println("x"+i+": "+resArray[i]);
+      }
+    }else{
+      System.out.println("Tidak ada solusi");
+    }
   }
 }

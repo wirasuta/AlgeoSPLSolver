@@ -60,20 +60,19 @@ public class Matrix {
   }
 
   public boolean OnlyLeadingOne(int i){
-    boolean leadingOneOnly, leadingOneFound;
-    leadingOneOnly = true;
+    boolean retLeadingOne, leadingOneFound;
+    retLeadingOne = true;
     leadingOneFound = false;
-    for ( int j = 1; j <= this.kol; j++) {
+    for ( int j = 1; j < this.kol; j++) {
       //Mencari leading one
       if (!leadingOneFound && Elmt(i,j) != 0){
         leadingOneFound = true;
-      }
-      //Memeriksa elemen setelah leading one
-      if (leadingOneFound && Elmt(i,j) != 0) {
-        leadingOneOnly = false;
+      } else if (leadingOneFound && Elmt(i,j) != 0) {
+        //Memeriksa elemen setelah leading one hingga sebelum kolom hasil
+        retLeadingOne = false;
       }
     }
-    return leadingOneOnly;
+    return retLeadingOne;
   }
 
   public int PosLeadingOne(int i){
@@ -185,5 +184,4 @@ public class Matrix {
       }
     }
   }
-
 }
