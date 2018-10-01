@@ -9,21 +9,21 @@ public class Main{
     //Pilihan program
     System.out.print("Penyelesaian [S]PL/[I]nterpolasi titik :");
     char choice = inp.next().charAt(0);
-    
+
     //Inisialisasi matrix dan array jawaban kosong
     Matrix mat = new Matrix(0,0);
     String[] resArray = new String[0];
 
     if (choice == 'S') { //Penyelesaian SPL
-      int M,N;
-      System.out.print("Masukkan Baris dan Kolom (Augmented Matrix) : ");
-      M = inp.nextInt();
-      N = inp.nextInt();
+      //int M,N;
+      //System.out.print("Masukkan Baris dan Kolom (Augmented Matrix) : ");
+      //M = inp.nextInt();
+      //N = inp.nextInt();
 
-      System.out.println("Masukkan elemen matrix");
-      mat = new Matrix(M,N);
+      //System.out.println("Masukkan elemen matrix");
+      //mat = new Matrix(M,N);
       try {
-        mat.InputMatrixSPL('I');
+        mat.InputMatrixSPL('E');
       } catch(FileNotFoundException e) {
         System.out.print(e);
       }
@@ -41,13 +41,13 @@ public class Main{
       }
     } else if (choice == 'I'){ //Interpolasi dari Titik
       int N;
-      System.out.print("Masukkan Jumlah Titik : ");
-      N = inp.nextInt();
+      //System.out.print("Masukkan Jumlah Titik : ");
+      //N = inp.nextInt();
 
-      System.out.println("Masukkan elemen matrix");
-      mat = new Matrix(N,N+1);
+      //System.out.println("Masukkan elemen matrix");
+      //mat = new Matrix(N,N+1);
       try {
-        mat.InputMatrixInterpolasi('I');
+        mat.InputMatrixInterpolasi('E');
       } catch(FileNotFoundException e) {
         System.out.print(e);
       }

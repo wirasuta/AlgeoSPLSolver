@@ -82,35 +82,41 @@ public class Solver {
    return y;
  }
 
+ //TODO: Simpan Jawaban Ke File
  public static void SimpanJawabanKeFile(Matrix mat, String[] resArray){
    Scanner in = new Scanner(System.in);
    System.out.println("Masukan lokasi file penyimpanan : ");
-   in.nextLine();
-   String fileName = in.nextLine() ;
+   String fileName = in.nextLine();
 
    File file = new File(fileName);
-   file.getParentFile().mkdirs();
+   try {
+     file.getParentFile().mkdirs();
+   } catch(Exception e) {
+   }
 
    try {
      PrintWriter printWriter = new PrintWriter(file);
 
-     printWriter.println("Echelon Matrix: ");
+     System.out.println("Echelon Matrix");
+     printWriter.printf("Echelon Matrix: \n");
      for(int i = 1; i <= mat.bar; i++)
      {
        for(int j = 1; j < mat.kol; j++)// kayaknya mengakses row sama kolom bisa gini aja tud, pake length
        {
-         printWriter.print(mat.Elmt(i,j));
-         printWriter.print(" ");
+         System.out.println(mat.Elmt(i,j));
+         printWriter.printf("%.2f", mat.Elmt(i,j));
+         printWriter.printf(" ");
        }
-       printWriter.print(mat.Elmt(i,mat.kol));
-       printWriter.print("\n");
+       printWriter.printf("%.2f",mat.Elmt(i,mat.kol));
+       printWriter.printf("\n");
      }
 
-     printWriter.println("Jawaban: ");
+     System.out.println("Jawaban");
+     printWriter.printf("Jawaban: \n");
 
      for (int k = 0; k < resArray.length; k++)//ini mungkin maish beda sama format parametrik
      {
-       printWriter.println("X" + k + " = " + resArray[k]);
+       printWriter.printf("X%d = %s", k, resArray[k]);
      }
 
    } catch (IOException e) {

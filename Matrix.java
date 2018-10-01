@@ -37,7 +37,6 @@ public class Matrix {
       }
     }else if (src == 'E'){
       System.out.print("Masukkan lokasi file augmented matrix: ");
-      inp.nextLine();
       String fileName = inp.nextLine();
       //Scanner untuk file external
       Scanner input = new Scanner (new File(fileName));
@@ -56,21 +55,21 @@ public class Matrix {
              colReader.nextDouble();
          }
       }
-
       //Mengubah jumlah kolom dan baris
-      this.kol = columns;
       this.bar = rows;
+      this.kol = columns;
+      this.TabInt = new double[rows+1][columns+1];
       input.close();
 
       //Membaca elemen matrix
       input = new Scanner(new File(fileName));
-      for(int i = 0; i < this.bar; i++)
+      for(int i = 1; i <= this.bar; i++)
       {
-         for(int j = 0; j < this.kol; j++)
+         for(int j = 1; j <= this.kol; j++)
          {
              if(input.hasNextDouble())
              {
-                 this.TabInt[i][j] = input.nextDouble();
+               this.TabInt[i][j] = input.nextDouble();
              }
          }
       }
@@ -102,7 +101,6 @@ public class Matrix {
     }else if (src == 'E'){
       Scanner in = new Scanner (System.in);
       System.out.print("Masukkan lokasi file titik yang akan diinterpolasi: ");
-      in.nextLine();
       String fileName = in.nextLine();
       //Scanner untuk file external
       Scanner input = new Scanner (new File(fileName));
@@ -112,11 +110,13 @@ public class Matrix {
       int columns = 2;
       while(input.hasNextLine())
       {
-          ++rows;
+        ++rows;
+        input.nextLine();
       }
       //Mengubah jumlah kolom dan baris
       this.bar = rows;
       this.kol = rows+1;
+      this.TabInt = new double[rows][rows+1];
       input.close();
 
       //Input matrix titik
@@ -128,11 +128,10 @@ public class Matrix {
         {
             if(input.hasNextDouble())
             {
-                inpMatrix.TabInt[i][j] = input.nextDouble();
+              inpMatrix.TabInt[i][j] = input.nextDouble();
             }
         }
       }
-
       //Mengubah matrix titik ke matrix SPL
       for ( int i=1; i<=this.bar; i++) {
         for ( int j=1; j<=this.kol; j++) {
