@@ -1,26 +1,77 @@
 import java.util.Scanner;
+import java.io.FileNotFoundException;
 
 public class Main{
   public static void main(String[] args) {
-    int m,n;
-
-    System.out.print("Masukkan BARIS <spasi> KOLOM : ");
 
     Scanner inp = new Scanner(System.in);
-    m = inp.nextInt();
-    n = inp.nextInt();
 
-    Matrix mat = new Matrix(m,n);
-    mat.PrintMatrix();
+    //Pilihan program
+    System.out.print("Penyelesaian [S]PL/[I]nterpolasi titik :");
+    char choice = inp.next().charAt(0);
+    
+    //Inisialisasi matrix dan array jawaban kosong
+    Matrix mat = new Matrix(0,0);
+    String[] resArray = new String[0];
 
-    System.out.println("===========");
-    if (Solver.MatrixSolvable(mat)){
-      String[] resArray = Solver.MatrixSolve(mat);
-      for (int i=1;i<resArray.length;i++) {
-          System.out.println("x"+i+": "+resArray[i]);
+    if (choice == 'S') { //Penyelesaian SPL
+      int M,N;
+      System.out.print("Masukkan Baris dan Kolom (Augmented Matrix) : ");
+      M = inp.nextInt();
+      N = inp.nextInt();
+
+      System.out.println("Masukkan elemen matrix");
+      mat = new Matrix(M,N);
+      try {
+        mat.InputMatrixSPL('I');
+      } catch(FileNotFoundException e) {
+        System.out.print(e);
       }
-    }else{
-      System.out.println("Tidak ada solusi");
+      mat.Matrix2REF();
+      mat.REF2RREF();
+
+      //Penyelesaian
+      if (Solver.MatrixSolvable(mat)){
+        resArray = Solver.MatrixSolve(mat);
+        for (int i=1;i<resArray.length;i++) {
+          System.out.println("x"+i+": "+resArray[i]);
+        }
+      }else{
+        System.out.println("Tidak ada solusi");
+      }
+    } else if (choice == 'I'){ //Interpolasi dari Titik
+      int N;
+      System.out.print("Masukkan Jumlah Titik : ");
+      N = inp.nextInt();
+
+      System.out.println("Masukkan elemen matrix");
+      mat = new Matrix(N,N+1);
+      try {
+        mat.InputMatrixInterpolasi('I');
+      } catch(FileNotFoundException e) {
+        System.out.print(e);
+      }
+      mat.Matrix2REF();
+      mat.REF2RREF();
+
+      //Asumsikan untuk permasalahan interpolasi solusi tepat satu
+      resArray = Solver.MatrixSolve(mat);
+      for (int i=1;i<resArray.length;i++) {
+        System.out.println("a"+(i-1)+": "+resArray[i]);
+      }
+
+      System.out.print("Masukkan nilai x untuk diaproksimasi : ");
+      float x = inp.nextFloat();
+      System.out.println("Nilai y = "+Solver.SolveInterpolasi(resArray,x));
+    }
+
+    //Mencetak jawaban ke file external
+    char c;
+    //input user
+    System.out.println("Apakah jawaban ingin disimpan ke file? (Y/N): ");
+    c = inp.next().charAt(0);
+    if ((c == 'Y') || (c == 'y')){
+      Solver.SimpanJawabanKeFile(mat,resArray);
     }
   }
 }

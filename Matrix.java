@@ -1,36 +1,158 @@
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Scanner;
 
 public class Matrix {
 
-  public float[][] TabInt;
+  public double[][] TabInt;
   public int kol;
   public int bar;
 
   //Konstruktor Matrix
   //Mengabaikan baris dan kolom index 0
   public Matrix(int x, int y){
-    this.TabInt = new float[x+1][y+1];
+    this.TabInt = new double[x+1][y+1];
     this.bar = x;
     this.kol = y;
-    InputMatrix();
   }
 
   //Getter Elemen
-  public float Elmt(int i, int j){
+  public double Elmt(int i, int j){
     return this.TabInt[i][j];
   }
 
-  //Input matrix dari input user
-  //TODO: Gabungkan dengan input matrix dari file external
-  public void InputMatrix(){
+  //Input matrix SPL dari input user
+  //F.S. TabInt pada objek terdefinisi
+  public void InputMatrixSPL (char src) throws FileNotFoundException{
     Scanner inp = new Scanner(System.in);
-    for ( int i=1; i<=this.bar; i++) {
-      for ( int j=1; j<=this.kol; j++) {
-        this.TabInt[i][j] = inp.nextFloat();
+    if (src == 'I'){
+      for ( int i=1; i<=this.bar; i++) {
+        for ( int j=1; j<=this.kol; j++) {
+          this.TabInt[i][j] = inp.nextDouble();
+        }
+      }
+    }else if (src == 'E'){
+      System.out.print("Masukkan lokasi file augmented matrix: ");
+      inp.nextLine();
+      String fileName = inp.nextLine();
+      //Scanner untuk file external
+      Scanner input = new Scanner (new File(fileName));
+
+      //Membaca jumlah baris dan kolom
+      int rows = 0;
+      int columns = 0;
+      while(input.hasNextLine())
+      {
+         ++rows;
+         columns = 0;
+         Scanner colReader = new Scanner(input.nextLine());
+         while(colReader.hasNextDouble())
+         {
+             ++columns;
+             colReader.nextDouble();
+         }
+      }
+
+      //Mengubah jumlah kolom dan baris
+      this.kol = columns;
+      this.bar = rows;
+      input.close();
+
+      //Membaca elemen matrix
+      input = new Scanner(new File(fileName));
+      for(int i = 0; i < this.bar; i++)
+      {
+         for(int j = 0; j < this.kol; j++)
+         {
+             if(input.hasNextDouble())
+             {
+                 this.TabInt[i][j] = input.nextDouble();
+             }
+         }
       }
     }
   }
 
+  //Input matrix interpolasi, kemudian mengubahnya menjadi matrix SPL
+  //F.S. Matrix SPL hasil dari titik-titik pada derajat n terdefinisi
+  public void InputMatrixInterpolasi (char src) throws FileNotFoundException{
+    if (src == 'I'){
+      Matrix inpMatrix = new Matrix(this.bar,2);
+      inpMatrix.InputMatrixSPL('I');
+      //Mengubah matrix titik ke matrix SPL
+      for ( int i=1; i<=this.bar; i++) {
+        for ( int j=1; j<=this.kol; j++) {
+          if (j == 1) {
+            this.TabInt[i][j] = 1;
+          }
+          else { // nilai elemen untuk kolom selain 1
+            if (j != this.kol) {
+              this.TabInt[i][j] = Math.pow(inpMatrix.TabInt [i][1], j-1);
+            }
+            else { // jika di akhir kolom masukan nilai augmentednya
+              this.TabInt[i][j] = inpMatrix.TabInt [i][2];
+            }
+          }
+        }
+      }
+    }else if (src == 'E'){
+      Scanner in = new Scanner (System.in);
+      System.out.print("Masukkan lokasi file titik yang akan diinterpolasi: ");
+      in.nextLine();
+      String fileName = in.nextLine();
+      //Scanner untuk file external
+      Scanner input = new Scanner (new File(fileName));
+
+      //Membaca jumlah baris dan kolom
+      int rows = 0;
+      int columns = 2;
+      while(input.hasNextLine())
+      {
+          ++rows;
+      }
+      //Mengubah jumlah kolom dan baris
+      this.bar = rows;
+      this.kol = rows+1;
+      input.close();
+
+      //Input matrix titik
+      Matrix inpMatrix = new Matrix(this.bar,2);
+      //Membaca titik ke dalam matrix
+      input = new Scanner(new File(fileName));
+      for(int i = 1; i <= this.bar; i++){
+        for(int j = 1; j <= 2; j++)
+        {
+            if(input.hasNextDouble())
+            {
+                inpMatrix.TabInt[i][j] = input.nextDouble();
+            }
+        }
+      }
+
+      //Mengubah matrix titik ke matrix SPL
+      for ( int i=1; i<=this.bar; i++) {
+        for ( int j=1; j<=this.kol; j++) {
+          if (j == 1) {
+            this.TabInt[i][j] = 1;
+          }
+          else { // nilai elemen untuk kolom selain 1
+            if (j != this.kol) {
+              this.TabInt[i][j] = Math.pow(inpMatrix.TabInt [i][1], j-1);
+            }
+            else { // jika di akhir kolom masukan nilai augmentednya
+              this.TabInt[i][j] = inpMatrix.TabInt [i][2];
+            }
+          }
+        }
+      }
+    }
+  }
+
+  //Mencetak matrix
   public void PrintMatrix(){
     for ( int i=1; i<=this.bar; i++) {
       for ( int j=1; j<=this.kol; j++) {
@@ -99,7 +221,7 @@ public class Matrix {
                        2. Urutkan berdasarkan jumlah 0 di depan leading elemnt
                        3. Mengalikan satu baris dengan konstanta ratio untuk membuat leading 1*/
     //Step 1 : Operasi Baris Elementer
-    float ratio;
+    double ratio;
     for ( int i = 1; i <= this.bar; i++) {
       for ( int j = i+1; j <= this.bar; j++) {
         if (this.TabInt[i][i] != 0) {
@@ -137,7 +259,7 @@ public class Matrix {
       }
       //Menukar 2 baris
       if (rowSw != -1) {
-        float temp;
+        double temp;
         for ( int m = 1; m <= this.kol; m++) {
           temp = Elmt(i,m);
           this.TabInt[i][m] = Elmt(rowSw,m);
@@ -165,7 +287,7 @@ public class Matrix {
 
   public void REF2RREF(){
     //Prekondisi : Matrix REF
-    float ratio;
+    double ratio;
     boolean leading1;
 
     for ( int i = 1; i < this.bar; i++) {

@@ -1,3 +1,11 @@
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Scanner;
+
 public class Solver {
 
   public static boolean MatrixSolvable(Matrix M){
@@ -23,17 +31,17 @@ public class Solver {
       if (!M.IsRowCoefZero(i)) {
         if (M.OnlyLeadingOne(i)) {
           //Hanya ada leading one pada baris ke-i
-          retArray[M.PosLeadingOne(i)] = Float.toString(M.Elmt(i,M.kol));
+          retArray[M.PosLeadingOne(i)] = Double.toString(M.Elmt(i,M.kol));
         }else{
           //Ada elemen non-0 setelah leading one pada baris ke-i
-          float resFloat = M.Elmt(i,M.kol);
+          double resDouble = M.Elmt(i,M.kol);
           String resString = "";
           for (int j=i+1; j<M.kol; j++) {
             if (M.Elmt(i,j) != 0) {
               //Kondisi elemen M ke i,j bukan 0
               try {
                 //Jika hasil ke-x merupakan bilangan, maka jumlahkan dengan elemen hasil
-                resFloat += Float.valueOf(retArray[j]);
+                resDouble += Double.valueOf(retArray[j]);
               } catch(NumberFormatException e) {
                 //Jika hasil ke-x bukan bilangan, sambungkan koefisien dengan parameter yang sesuai
                 resString += ConCoefParam((-1)*M.Elmt(i,j),retArray[j]);
@@ -41,33 +49,73 @@ public class Solver {
             }
           }
           //Gabungkan bilangan hasil dengan parameter
-          retArray[M.PosLeadingOne(i)] = Float.toString(resFloat) + resString;
+          retArray[M.PosLeadingOne(i)] = Double.toString(resDouble) + resString;
         }
       }
     }
     return retArray;
   }
 
-  private static String ConCoefParam(float coef, String param){
+  private static String ConCoefParam(double coef, String param){
+    if (param.length()>1){
+      param = "("+param+")";
+    }
     if (coef>1) {
-      return "+" + Float.toString(coef) + param;
+      return "+" + Double.toString(coef) + param;
     }else if (coef == 1){
       return "+" + param;
     }else if (coef == -1){
       return "-" + param;
     }else{
-      return Float.toString(coef) + param;
+      return Double.toString(coef) + param;
     }
   }
 
-  public static float SolveInterpolasi(String[] S,float x) {
-	 float y = 0;
-   float s;
+  public static double SolveInterpolasi(String[] S,double x) {
+	 double y = 0;
+   double s;
 	 // penyelesaian f(x) setelah fungsi interpolasi terbentuk
    for (int i=1; i<S.length; i++) {
-     s = Float.valueOf(S[i]);
+     s = Double.valueOf(S[i]);
      y += (s * Math.pow(x,i-1));
    }
    return y;
+ }
+
+ public static void SimpanJawabanKeFile(Matrix mat, String[] resArray){
+   Scanner in = new Scanner(System.in);
+   System.out.println("Masukan lokasi file penyimpanan : ");
+   in.nextLine();
+   String fileName = in.nextLine() ;
+
+   File file = new File(fileName);
+   file.getParentFile().mkdirs();
+
+   try {
+     PrintWriter printWriter = new PrintWriter(file);
+
+     printWriter.println("Echelon Matrix: ");
+     for(int i = 1; i <= mat.bar; i++)
+     {
+       for(int j = 1; j < mat.kol; j++)// kayaknya mengakses row sama kolom bisa gini aja tud, pake length
+       {
+         printWriter.print(mat.Elmt(i,j));
+         printWriter.print(" ");
+       }
+       printWriter.print(mat.Elmt(i,mat.kol));
+       printWriter.print("\n");
+     }
+
+     printWriter.println("Jawaban: ");
+
+     for (int k = 0; k < resArray.length; k++)//ini mungkin maish beda sama format parametrik
+     {
+       printWriter.println("X" + k + " = " + resArray[k]);
+     }
+
+   } catch (IOException e) {
+     //Auto-generated catch block
+     e.printStackTrace();
+   }
  }
 }
