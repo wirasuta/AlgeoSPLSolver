@@ -82,7 +82,6 @@ public class Solver {
    return y;
  }
 
- //TODO: Simpan Jawaban Ke File
  public static void SimpanJawabanKeFile(Matrix mat, String[] resArray){
    Scanner in = new Scanner(System.in);
    System.out.println("Masukan lokasi file penyimpanan : ");
@@ -97,13 +96,12 @@ public class Solver {
    try {
      PrintWriter printWriter = new PrintWriter(file);
 
-     System.out.println("Echelon Matrix");
-     printWriter.printf("Echelon Matrix: \n");
+     //Mencetak matrix REF/RREF sesuai dengan pilihan awal
+     printWriter.printf("Matrix setelah proses: \n");
      for(int i = 1; i <= mat.bar; i++)
      {
-       for(int j = 1; j < mat.kol; j++)// kayaknya mengakses row sama kolom bisa gini aja tud, pake length
+       for(int j = 1; j < mat.kol; j++)
        {
-         System.out.println(mat.Elmt(i,j));
          printWriter.printf("%.2f", mat.Elmt(i,j));
          printWriter.printf(" ");
        }
@@ -111,13 +109,14 @@ public class Solver {
        printWriter.printf("\n");
      }
 
-     System.out.println("Jawaban");
+     //Mencetak jawaban
      printWriter.printf("Jawaban: \n");
-
-     for (int k = 0; k < resArray.length; k++)//ini mungkin maish beda sama format parametrik
+     for (int k = 1; k < resArray.length; k++)
      {
-       printWriter.printf("X%d = %s", k, resArray[k]);
+       printWriter.printf("X%d = %s ", k, resArray[k]);
      }
+
+     printWriter.close();
 
    } catch (IOException e) {
      //Auto-generated catch block

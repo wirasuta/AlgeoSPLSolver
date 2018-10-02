@@ -163,10 +163,12 @@ public class Matrix {
 
   //Operasi pada matrix augmented
   //Informasi mengenai suatu baris
+
+  //Memeriksa apakah satu baris koefisien terdiri seluruhnya dari nol
   public boolean IsRowCoefZero(int i){
     int j = 1;
     boolean allZero = true;
-    while (j<=this.kol && allZero) {
+    while (j<this.kol && allZero) {
       if (this.TabInt[i][j] != 0) {
         allZero = false;
       }else{
@@ -176,6 +178,7 @@ public class Matrix {
     return allZero;
   }
 
+  //Memeriksa apakah elemen hasil baris ke-i adalah nol
   public boolean IsResZero(int i){
     return (this.TabInt[i][this.kol] == 0);
   }
@@ -210,6 +213,7 @@ public class Matrix {
         j++;
       }
     }
+    //Mengembalikan posisi leading 1
     return j;
   }
 
@@ -289,6 +293,7 @@ public class Matrix {
     double ratio;
     boolean leading1;
 
+    //Mengurangi tiap elemen di atas leading one dengan OBE sehingga terbentuk RREF
     for ( int i = 1; i < this.bar; i++) {
       for (int j = i+1; j <= this.bar; j++) {
         ratio = 1;

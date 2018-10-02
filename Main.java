@@ -30,6 +30,8 @@ public class Main{
       mat.Matrix2REF();
       mat.REF2RREF();
 
+      mat.PrintMatrix();
+
       //Penyelesaian
       if (Solver.MatrixSolvable(mat)){
         resArray = Solver.MatrixSolve(mat);

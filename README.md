@@ -4,17 +4,18 @@ Github page untuk tugas besar aljabar geometri teknik informatika ITB TA 2018/20
 
 ## Progress Control
 
-* [ ] Matrix.java
-   * [ ] Input
-      * [ ] Input File External
-      * [X] Input Command Line
+* [X] Matrix.java
+   * [X] Input
+      * [X] Input tile external
+      * [X] Input command line
    * [X] Matrix ke REF
    * [X] Matrix ke RREF
-   * [ ] Method Tambahan
+   * [X] Method tambahan
 
-* [ ] Solver.java
-   * [X] Solve Matrix REF/RREF
+* [X] Solver.java
+   * [X] Solve matrix REF/RREF
    * [X] Interpolasi
-   * [ ] Method Tambahan
+   * [X] Write file external
+   * [X] Method Tambahan
 
 * [ ] Main Program
