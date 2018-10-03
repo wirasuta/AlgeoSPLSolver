@@ -27,15 +27,15 @@ public class Matrix {
 
   //Input matrix SPL dari input user
   //F.S. TabInt pada objek terdefinisi
-  public void InputMatrixSPL (char src) throws FileNotFoundException{
+  public void InputMatrixSPL (int src) throws FileNotFoundException{
     Scanner inp = new Scanner(System.in);
-    if (src == 'I'){
+    if (src == 1){
       for ( int i=1; i<=this.bar; i++) {
         for ( int j=1; j<=this.kol; j++) {
           this.TabInt[i][j] = inp.nextDouble();
         }
       }
-    }else if (src == 'E'){
+    }else if (src == 2){
       System.out.print("Masukkan lokasi file augmented matrix: ");
       String fileName = inp.nextLine();
       //Scanner untuk file external
@@ -78,10 +78,10 @@ public class Matrix {
 
   //Input matrix interpolasi, kemudian mengubahnya menjadi matrix SPL
   //F.S. Matrix SPL hasil dari titik-titik pada derajat n terdefinisi
-  public void InputMatrixInterpolasi (char src) throws FileNotFoundException{
-    if (src == 'I'){
+  public void InputMatrixInterpolasi (int src) throws FileNotFoundException{
+    if (src == 1){
       Matrix inpMatrix = new Matrix(this.bar,2);
-      inpMatrix.InputMatrixSPL('I');
+      inpMatrix.InputMatrixSPL(1);
       //Mengubah matrix titik ke matrix SPL
       for ( int i=1; i<=this.bar; i++) {
         for ( int j=1; j<=this.kol; j++) {
@@ -98,7 +98,7 @@ public class Matrix {
           }
         }
       }
-    }else if (src == 'E'){
+    }else if (src == 2){
       Scanner in = new Scanner (System.in);
       System.out.print("Masukkan lokasi file titik yang akan diinterpolasi: ");
       String fileName = in.nextLine();
@@ -155,7 +155,7 @@ public class Matrix {
   public void PrintMatrix(){
     for ( int i=1; i<=this.bar; i++) {
       for ( int j=1; j<=this.kol; j++) {
-        System.out.print(this.TabInt[i][j]+" ");
+        System.out.printf("%.3f ",this.TabInt[i][j]);
       }
       System.out.print("\n");
     }
@@ -199,7 +199,7 @@ public class Matrix {
     return retLeadingOne;
   }
 
-  public int PosLeadingOne(int i){
+  public int PosLeadingElmt(int i){
     //Prekondisi : Baris ke-i memiliki leading 1
     boolean leadingOneFound;
     int j;
@@ -227,8 +227,8 @@ public class Matrix {
     double ratio;
     for ( int i = 1; i <= this.bar; i++) {
       for ( int j = i+1; j <= this.bar; j++) {
-        if (this.TabInt[i][i] != 0) {
-          ratio = this.TabInt[j][i]/this.TabInt[i][i];
+        if (this.TabInt[i][this.PosLeadingElmt(i)] != 0) {
+          ratio = this.TabInt[j][this.PosLeadingElmt(i)]/this.TabInt[i][this.PosLeadingElmt(i)];
           for ( int z = 1; z <= this.kol; z++) {
             this.TabInt[j][z] -= ratio * this.TabInt[i][z];
           }

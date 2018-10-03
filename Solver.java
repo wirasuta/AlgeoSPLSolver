@@ -31,7 +31,7 @@ public class Solver {
       if (!M.IsRowCoefZero(i)) {
         if (M.OnlyLeadingOne(i)) {
           //Hanya ada leading one pada baris ke-i
-          retArray[M.PosLeadingOne(i)] = Double.toString(M.Elmt(i,M.kol));
+          retArray[M.PosLeadingElmt(i)] = Double.toString(M.Elmt(i,M.kol));
         }else{
           //Ada elemen non-0 setelah leading one pada baris ke-i
           double resDouble = M.Elmt(i,M.kol);
@@ -49,7 +49,11 @@ public class Solver {
             }
           }
           //Gabungkan bilangan hasil dengan parameter
-          retArray[M.PosLeadingOne(i)] = Double.toString(resDouble) + resString;
+          if (resDouble != 0) {
+            retArray[M.PosLeadingElmt(i)] = String.format("%.3f",resDouble) + resString;
+          }else{
+            retArray[M.PosLeadingElmt(i)] = resString;
+          }
         }
       }
     }
@@ -69,6 +73,25 @@ public class Solver {
     }else{
       return Double.toString(coef) + param;
     }
+  }
+
+  public static boolean IsNotInterpolasiable (Matrix m) {
+    // Menghasilkan true jika persamaan interpolasi tak bisa diselesaikan dan false jika persoalan interpolasi dapat diselesaikan
+    boolean isNotSolve = true;
+    int j = 2;
+    while ((isNotSolve) || (j<=m.kol)) {
+      double temp = m.Elmt(1,j);
+      int i = 2;
+      while ((isNotSolve) && (i<=m.bar)) {
+        if (temp != m.Elmt(i,j)) {
+          isNotSolve = false;
+        } else {
+          i++;
+        }
+      }
+      j++;
+    }
+    return isNotSolve;
   }
 
   public static double SolveInterpolasi(String[] S,double x) {
@@ -102,10 +125,10 @@ public class Solver {
      {
        for(int j = 1; j < mat.kol; j++)
        {
-         printWriter.printf("%.2f", mat.Elmt(i,j));
+         printWriter.printf("%.3f", mat.Elmt(i,j));
          printWriter.printf(" ");
        }
-       printWriter.printf("%.2f",mat.Elmt(i,mat.kol));
+       printWriter.printf("%.3f",mat.Elmt(i,mat.kol));
        printWriter.printf("\n");
      }
 
@@ -113,6 +136,7 @@ public class Solver {
      printWriter.printf("Jawaban: \n");
      for (int k = 1; k < resArray.length; k++)
      {
+       System.out.printf("X%d = %s ", k, resArray[k]);
        printWriter.printf("X%d = %s ", k, resArray[k]);
      }
 
