@@ -271,18 +271,13 @@ public class Matrix {
       }
     }
 
-    boolean leading1;
     //Step 3 : Mengalikan tiap baris dengan konstanta ratio sehingga memiliki leading 1
     for ( int i = 1; i <= this.bar; i++) {
-      ratio = 1;
-      leading1 = true;
-      for ( int j = 1; j <= this.kol; j++) {
-        if (leading1 && Elmt(i,j) != 0){
-          leading1 = false;
-          ratio = 1/Elmt(i,j);
-          this.TabInt[i][j] *= ratio;
-        }else if (!leading1 && Elmt(i,j) != 0){
-          this.TabInt[i][j] *= ratio;
+      if (!this.IsRowCoefZero(i)) {
+        int posLeading = this.PosLeadingElmt(i);
+        double ratioLeadingOne = 1/posLeading;
+        for (int j = posLeading; j<=this.bar; j++) {
+          this.TabInt[i][j] *= ratioLeadingOne;
         }
       }
     }
