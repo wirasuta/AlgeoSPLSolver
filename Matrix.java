@@ -116,7 +116,7 @@ public class Matrix {
       //Mengubah jumlah kolom dan baris
       this.bar = rows;
       this.kol = rows+1;
-      this.TabInt = new double[rows][rows+1];
+      this.TabInt = new double[this.bar+1][this.kol+1];
       input.close();
 
       //Input matrix titik
@@ -155,7 +155,7 @@ public class Matrix {
   public void PrintMatrix(){
     for ( int i=1; i<=this.bar; i++) {
       for ( int j=1; j<=this.kol; j++) {
-        System.out.printf("%.3f ",this.TabInt[i][j]);
+        System.out.printf("%f ",this.TabInt[i][j]);
       }
       System.out.print("\n");
     }
@@ -236,6 +236,15 @@ public class Matrix {
       }
     }
 
+    //Normalisasi bilangan mendekati 0 menjadi 0
+    for ( int i = 1; i <= this.bar; i++) {
+      for ( int j = 1; j <= this.kol; j++) {
+        if (Elmt(i,j)<1E-20 && Elmt(i,j)>-1E-20) {
+          this.TabInt[i][j] = 0;
+        }
+      }
+    }
+
     //Step 2 : Menukar baris untuk mengurutkan 0
     for ( int i = 1; i < this.bar; i++) {
       //Mencari jumlah nol di baris ke-i
@@ -271,12 +280,23 @@ public class Matrix {
       }
     }
 
+    for ( int i = 1; i <= this.bar; i++) {
+      for ( int j = i+1; j <= this.bar; j++) {
+        if (this.TabInt[i][this.PosLeadingElmt(i)] != 0) {
+          ratio = this.TabInt[j][this.PosLeadingElmt(i)]/this.TabInt[i][this.PosLeadingElmt(i)];
+          for ( int z = 1; z <= this.kol; z++) {
+            this.TabInt[j][z] -= ratio * this.TabInt[i][z];
+          }
+        }
+      }
+    }
+
     //Step 3 : Mengalikan tiap baris dengan konstanta ratio sehingga memiliki leading 1
     for ( int i = 1; i <= this.bar; i++) {
       if (!this.IsRowCoefZero(i)) {
         int posLeading = this.PosLeadingElmt(i);
-        double ratioLeadingOne = 1/posLeading;
-        for (int j = posLeading; j<=this.bar; j++) {
+        double ratioLeadingOne = 1/Elmt(i,posLeading);
+        for (int j = posLeading; j<=this.kol; j++) {
           this.TabInt[i][j] *= ratioLeadingOne;
         }
       }
@@ -289,18 +309,75 @@ public class Matrix {
     boolean leading1;
 
     //Mengurangi tiap elemen di atas leading one dengan OBE sehingga terbentuk RREF
-    for ( int i = 1; i < this.bar; i++) {
-      for (int j = i+1; j <= this.bar; j++) {
-        ratio = 1;
-        leading1 = true;
-        for ( int k = 1; k <= this.kol; k++) {
-          if (leading1 && Elmt(j,k) != 0){
-            leading1 = false;
-            ratio = Elmt(i,k)/Elmt(j,k);
-            this.TabInt[i][k] -= ratio*Elmt(j,k);
-          }else if (!leading1){
-            this.TabInt[i][k] -= ratio*Elmt(j,k);
+    //Old OBE algorithm
+    //for ( int i = 1; i < this.bar; i++) {
+    //  for (int j = i+1; j <= this.bar; j++) {
+    //    ratio = 1;
+    //    leading1 = true;
+    //    for ( int k = 1; k <= this.kol; k++) {
+    //      if (leading1 && Elmt(j,k) != 0){
+    //        leading1 = false;
+    //        ratio = Elmt(i,k)/Elmt(j,k);
+    //        this.TabInt[i][k] -= ratio*Elmt(j,k);
+    //      }else if (!leading1){
+    //        this.TabInt[i][k] -= ratio*Elmt(j,k);
+    //      }
+    //    }
+    //  }
+    //}
+
+    //Normalisasi bilangan mendekati 0 menjadi 0
+    for ( int i = 1; i <= this.bar; i++) {
+      for ( int j = 1; j <= this.kol; j++) {
+        if (Elmt(i,j)<1E-20 && Elmt(i,j)>-1E-20) {
+          this.TabInt[i][j] = 0;
+        }
+      }
+    }
+
+    for ( int i = this.bar; i > 1; i--) {
+      for (int j = i-1; j >= 1; j--) {
+        if (!IsRowCoefZero(i)) {
+          int leadPos = PosLeadingElmt(i);
+          ratio = Elmt(j,leadPos)/Elmt(i,leadPos);
+          for (int k = leadPos; k<=this.kol; k++) {
+            this.TabInt[j][k] -= ratio*Elmt(i,k);
           }
+        }
+      }
+    }
+
+    //Step 2 : Menukar baris untuk mengurutkan 0
+    for ( int i = 1; i < this.bar; i++) {
+      //Mencari jumlah nol di baris ke-i
+      int zeroi,j;
+      zeroi = 0; j = 1;
+      while (j < this.kol && Elmt(i,j) == 0) {
+        zeroi++;
+        j++;
+      }
+      //Mencari jumlah nol di baris setelah baris ke-i
+      int rowSw,zeroRowSw;
+      rowSw = -1; zeroRowSw = zeroi;
+      for ( int k = i+1; k <= this.bar; k++) {
+        int zerok,l;
+        zerok = 0; l = 1;
+        while (l < this.kol && Elmt(k,l) == 0) {
+          zerok++;
+          l++;
+        }
+        if (zerok<zeroRowSw){
+          rowSw = k;
+          zeroRowSw = zerok;
+        }
+      }
+      //Menukar 2 baris
+      if (rowSw != -1) {
+        double temp;
+        for ( int m = 1; m <= this.kol; m++) {
+          temp = Elmt(i,m);
+          this.TabInt[i][m] = Elmt(rowSw,m);
+          this.TabInt[rowSw][m] = temp;
         }
       }
     }

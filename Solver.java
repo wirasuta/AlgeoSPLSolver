@@ -41,6 +41,9 @@ public static String[] MatrixSolve(Matrix M){
                   //Kondisi elemen M ke i,j bukan 0
                   try {
                      //Jika hasil ke-x merupakan bilangan, maka jumlahkan dengan elemen hasil
+                     if (retArray[j].contains("d")) {
+                        throw new NumberFormatException("contains d");
+                     }
                      resDouble += (-1)*M.Elmt(i,j)*Double.valueOf(retArray[j]);
                   } catch(NumberFormatException e) {
                      //Jika hasil ke-x bukan bilangan, sambungkan koefisien dengan parameter yang sesuai
@@ -51,8 +54,14 @@ public static String[] MatrixSolve(Matrix M){
             //Gabungkan bilangan hasil dengan parameter
             if (resDouble != 0) {
                retArray[M.PosLeadingElmt(i)] = String.format("%.3f",resDouble) + resString;
+            }else if (resDouble == 0 && resString == ""){
+               retArray[M.PosLeadingElmt(i)] = String.format("%.3f",resDouble);
             }else{
                retArray[M.PosLeadingElmt(i)] = resString;
+            }
+
+            if (retArray[M.PosLeadingElmt(i)].startsWith("+")){
+              retArray[M.PosLeadingElmt(i)] = retArray[M.PosLeadingElmt(i)].substring(1);
             }
          }
       }
@@ -61,7 +70,7 @@ public static String[] MatrixSolve(Matrix M){
 }
 
 private static String ConCoefParam(double coef, String param){
-   if (param.length()>1) {
+   if (param.length()>2 && coef!=1 && coef!=1) {
       param = "("+param+")";
    }
    if (coef>1) {
@@ -133,11 +142,14 @@ public static void SimpanJawabanKeFile(Matrix mat, String[] resArray){
       }
 
       //Mencetak jawaban
-      printWriter.printf("Jawaban: \n");
-      for (int k = 1; k < resArray.length; k++)
-      {
-         System.out.printf("X%d = %s ", k, resArray[k]);
-         printWriter.printf("X%d = %s ", k, resArray[k]);
+      if (resArray[1] != null){
+        printWriter.printf("Jawaban: \n");
+        for (int k = 1; k < resArray.length; k++)
+        {
+          printWriter.printf("X%d = %s ", k, resArray[k]);
+        }
+      }else{
+        printWriter.println("Tidak ada solusi");
       }
 
       printWriter.close();

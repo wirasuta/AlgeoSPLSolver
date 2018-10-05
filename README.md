@@ -18,4 +18,5 @@ Github page untuk tugas besar aljabar geometri teknik informatika ITB TA 2018/20
    * [X] Write file external
    * [X] Method Tambahan
 
-* [ ] Main Program
+* [X] Main Program
+* [?] Debug Program

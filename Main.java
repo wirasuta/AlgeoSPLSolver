@@ -9,7 +9,6 @@ public static boolean isInputMenuValid (int inp) {
     return (inp == 1 || inp == 2 || inp == 3);
 }
 
-
 public static int inputMenu () {
     // KAMUS LOKAL
     int Choice;
@@ -143,6 +142,7 @@ public static int inputMenuAgain () {
 
     return Choice;
 }
+
 public static void main(String[] args) throws FileNotFoundException {
 
     boolean again = true;
@@ -306,7 +306,7 @@ public static void main(String[] args) throws FileNotFoundException {
                         }
                         resArray = new String[mat.kol];
 
-                        if (Solver.IsNotInterpolasiable(mat)) {
+                        if (!Solver.IsNotInterpolasiable(mat)) {
                             // Pencarian solusi menggunakan metode Gauss
                             mat.Matrix2REF();
 
@@ -337,7 +337,7 @@ public static void main(String[] args) throws FileNotFoundException {
                         mat.InputMatrixInterpolasi(choice);
                         resArray = new String[mat.kol];
 
-                        if (Solver.IsNotInterpolasiable(mat)) {
+                        if (!Solver.IsNotInterpolasiable(mat)) {
                             // Pencarian solusi menggunakan metode Gauss - Jordan
                             mat.Matrix2REF();
                             mat.REF2RREF();
@@ -363,7 +363,7 @@ public static void main(String[] args) throws FileNotFoundException {
                         mat.Matrix2REF();
                         mat.REF2RREF();
 
-                        if (Solver.IsNotInterpolasiable(mat)) {
+                        if (!Solver.IsNotInterpolasiable(mat)) {
                             // Pencarian solusi menggunakan metode Gauss - Jordan
                             mat.Matrix2REF();
                             mat.REF2RREF();
@@ -390,7 +390,7 @@ public static void main(String[] args) throws FileNotFoundException {
             }
 
         }
-				
+
 				LastMenu ();
         int choice = inputMenuAgain ();
 
